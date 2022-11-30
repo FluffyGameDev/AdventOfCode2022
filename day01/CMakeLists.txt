@@ -2,7 +2,7 @@
 
 include_directories("${CMAKE_SOURCE_DIR}/external/fmt/include")
 
-add_executable (AdventOfCode2022_Day1 "day1.cpp" )
+add_executable (AdventOfCode2022_Day1 "main.cpp" "day1.cpp" "tests.h" "tests.cpp")
 
 target_link_libraries(AdventOfCode2022_Day1 PRIVATE fmt::fmt-header-only)
 

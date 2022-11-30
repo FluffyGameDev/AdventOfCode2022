@@ -1,40 +1,30 @@
-﻿#include <algorithm>
+﻿#include "day1.h"
+
+#include <algorithm>
 #include <fstream>
 #include <numeric>
 #include <vector>
 
-#include <fmt/core.h>
 
-bool ReadInputValues(/*TODO: output data*/)
+namespace Day1
 {
-    static const char* inputFile{ "input.txt" };
-    std::ifstream inputStream{ inputFile };
-
-    bool readSucceeded{ inputStream.is_open() };
-    if (readSucceeded)
+    bool ReadInputValues(/*TODO: output data*/)
     {
-        while (!inputStream.eof())
+        static const char* inputFile{ "input.txt" };
+        std::ifstream inputStream{ inputFile };
+
+        bool readSucceeded{ inputStream.is_open() };
+        if (readSucceeded)
         {
-            std::uint32_t readValue{};
-            inputStream >> readValue; //TODO: use some other struct
+            while (!inputStream.eof())
+            {
+                std::uint32_t readValue{};
+                inputStream >> readValue; //TODO: use some other struct
+            }
+
+            inputStream.close();
         }
 
-        inputStream.close();
+        return readSucceeded;
     }
-
-    return readSucceeded;
-}
-
-int main()
-{
-    if (ReadInputValues())
-    {
-        //TODO
-    }
-    else
-    {
-        fmt::print("Failed to open input file.\n");
-    }
-
-    return 0;
 }
