@@ -7,10 +7,14 @@ void main()
 {
     if (Day1::Tests::ValidateTests())
     {
-        if (Day1::ReadInputValues())
+        std::vector<std::uint32_t> caloriesPerElf;
+        if (Day1::ReadInputValues(caloriesPerElf))
         {
-            //TODO
-            fmt::print("Done.\n");
+            std::uint32_t maxCalories{ Day1::ComputeMaxCalories(caloriesPerElf) };
+            std::uint32_t total3Calories{ Day1::ComputeTopNCalories(caloriesPerElf, 3) };
+
+            fmt::print("Max Calories {}.\n", maxCalories);
+            fmt::print("Top 3 Elves Calories {}.\n", total3Calories);
         }
         else
         {
