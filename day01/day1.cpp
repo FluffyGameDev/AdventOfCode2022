@@ -60,7 +60,7 @@ namespace Day1
     {
         auto endIt{ caloriesPerElf.begin() + n };
         std::nth_element(caloriesPerElf.begin(), endIt, caloriesPerElf.end(), std::greater());
-        uint32_t total{ std::accumulate(caloriesPerElf.begin(), endIt, 0U) };
+        std::uint32_t total{ std::accumulate(caloriesPerElf.begin(), endIt, 0U) };
         return total;
     }
 }
