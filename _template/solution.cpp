@@ -5,28 +5,32 @@ namespace AoC
 {
     namespace Internal
     {
+        // TODO
     }
 
     bool ReadInput(std::istream& inputStream, InputData& inputData)
     {
+        // TODO
         return true;
     }
 
     void ComputeOutput(const InputData& inputData, OutputData& output)
     {
+        // TODO
     }
 
     bool ValidateTestOutput(const OutputData& outputData)
     {
         bool didTestsPass{ true };
 
-        //TODO
+        didTestsPass &= false; // TODO
 
         return didTestsPass;
     }
 
     void PrintOutput(const OutputData& output)
     {
+        // TODO
     }
 }
 
