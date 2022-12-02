@@ -1,12 +1,16 @@
 #pragma once
 
-#include <array>
 #include <cstdint>
-#include <istream>
-#include <vector>
 
-namespace Day2
+namespace AoC
 {
+    const char* s_testInputData
+    {
+        "A Y\n"
+        "B X\n"
+        "C Z"
+    };
+
     static constexpr std::uint32_t PossibleMoveCount{ 3 };
     static constexpr std::uint32_t PossibleMoveCombinations{ PossibleMoveCount * PossibleMoveCount };
 
@@ -20,8 +24,4 @@ namespace Day2
         std::uint32_t TheoreticalTotalScore;
         std::uint32_t RealTotalScore;
     };
-
-    bool ReadInputValues(TournamentMovesSummary& tournamentMovesSummary);
-    void ReadTournamentMovesSummary(std::istream& inputStream, TournamentMovesSummary& tournamentMovesSummary);
-    void ComputeTournamentResults(const TournamentMovesSummary& movesSummary, TournamentResults& TournamentResults);
 }
