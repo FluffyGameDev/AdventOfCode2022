@@ -7,13 +7,13 @@ namespace AoC
         "" // TODO
     };
 
-	struct InputData
-	{
-		// TODO
-	};
+    struct InputData
+    {
+        // TODO
+    };
 
-	struct OutputData
-	{
-		// TODO
-	};
+    struct OutputData
+    {
+        // TODO
+    };
 }

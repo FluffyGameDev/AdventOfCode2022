@@ -22,9 +22,9 @@ namespace AoC
         "10000"
     };
 
-	struct OutputData
-	{
-		std::uint32_t maxCalories;
-		std::uint32_t total3Calories;
-	};
+    struct OutputData
+    {
+        std::uint32_t maxCalories;
+        std::uint32_t total3Calories;
+    };
 }
