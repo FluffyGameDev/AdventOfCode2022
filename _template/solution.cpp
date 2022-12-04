@@ -14,12 +14,12 @@ namespace AoC
         return true;
     }
 
-    void ComputeOutput(const InputData& inputData, OutputData& output)
+    void ComputeOutput(const InputData& input, OutputData& output)
     {
         // TODO
     }
 
-    bool ValidateTestOutput(const OutputData& outputData)
+    bool ValidateTestOutput(const OutputData& output)
     {
         bool didTestsPass{ true };
 
