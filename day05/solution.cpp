@@ -34,7 +34,7 @@ namespace AoC
             std::getline(inputStream, currentLine);
             std::stringstream lineStream{ currentLine };
 
-            std::uint32_t stackIndex{ 0 };
+            u32 stackIndex{ 0 };
             while (!lineStream.eof())
             {
                 lineStream.read(&ignore, 1);

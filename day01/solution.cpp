@@ -9,24 +9,24 @@ namespace AoC
 {
     namespace Internal
     {
-        std::uint32_t ComputeMaxCalories(const std::vector<std::uint32_t>& caloriesPerElf)
+        u32 ComputeMaxCalories(const std::vector<u32>& caloriesPerElf)
         {
             auto foundIt = std::max_element(caloriesPerElf.begin(), caloriesPerElf.end());
             return foundIt != caloriesPerElf.end() ? *foundIt : 0;
         }
 
-        std::uint32_t ComputeTopNCalories(std::vector<std::uint32_t>& caloriesPerElf, std::uint32_t n)
+        u32 ComputeTopNCalories(std::vector<u32>& caloriesPerElf, u32 n)
         {
             auto endIt{ caloriesPerElf.begin() + n };
             std::nth_element(caloriesPerElf.begin(), endIt, caloriesPerElf.end(), std::greater());
-            std::uint32_t total{ std::accumulate(caloriesPerElf.begin(), endIt, 0U) };
+            u32 total{ std::accumulate(caloriesPerElf.begin(), endIt, 0U) };
             return total;
         }
     }
 
-    bool ReadInput(std::istream& inputStream, std::vector<std::uint32_t>& caloriesPerElf)
+    bool ReadInput(std::istream& inputStream, std::vector<u32>& caloriesPerElf)
     {
-        std::uint32_t currentElfCalories{};
+        u32 currentElfCalories{};
         std::string currentLine{};
         while (std::getline(inputStream, currentLine))
         {
@@ -38,7 +38,7 @@ namespace AoC
             else
             {
                 std::stringstream lineBuffer{ currentLine };
-                std::uint32_t calories{};
+                u32 calories{};
                 lineBuffer >> calories;
                 currentElfCalories += calories;
             }
@@ -51,7 +51,7 @@ namespace AoC
         return true;
     }
 
-    void ComputeOutput(std::vector<std::uint32_t>& caloriesPerElf, OutputData& output)
+    void ComputeOutput(std::vector<u32>& caloriesPerElf, OutputData& output)
     {
         output.maxCalories = Internal::ComputeMaxCalories(caloriesPerElf);
         output.total3Calories = Internal::ComputeTopNCalories(caloriesPerElf, 3);
@@ -59,8 +59,8 @@ namespace AoC
 
     bool ValidateTestOutput(const OutputData& outputData)
     {
-        static const std::uint32_t part1ExpectedResult{ 24000 };
-        static const std::uint32_t part2ExpectedResult{ 45000 };
+        static const u32 part1ExpectedResult{ 24000 };
+        static const u32 part2ExpectedResult{ 45000 };
 
         bool didTestsPass{ true };
 
@@ -79,5 +79,5 @@ namespace AoC
 
 void main()
 {
-    AoC::Run<std::vector<std::uint32_t>, AoC::OutputData>(AoC::s_testInputData);
+    AoC::Run<std::vector<AoC::u32>, AoC::OutputData>(AoC::s_testInputData);
 }

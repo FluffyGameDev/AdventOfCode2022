@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "types.h"
 
 namespace AoC
 {
@@ -24,7 +24,7 @@ namespace AoC
 
     struct OutputData
     {
-        std::uint32_t maxCalories;
-        std::uint32_t total3Calories;
+        u32 maxCalories;
+        u32 total3Calories;
     };
 }

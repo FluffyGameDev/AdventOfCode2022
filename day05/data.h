@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "types.h"
+
 namespace AoC
 {
     const char* s_testInputData
@@ -20,9 +22,9 @@ namespace AoC
 
     struct Command
     {
-        std::uint32_t Quantity;
-        std::uint32_t SourceId;
-        std::uint32_t DestinationId;
+        u32 Quantity;
+        u32 SourceId;
+        u32 DestinationId;
     };
 
     struct InputData

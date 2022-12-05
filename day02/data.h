@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "types.h"
 
 namespace AoC
 {
@@ -11,17 +11,17 @@ namespace AoC
         "C Z"
     };
 
-    static constexpr std::uint32_t PossibleMoveCount{ 3 };
-    static constexpr std::uint32_t PossibleMoveCombinations{ PossibleMoveCount * PossibleMoveCount };
+    static constexpr u32 PossibleMoveCount{ 3 };
+    static constexpr u32 PossibleMoveCombinations{ PossibleMoveCount * PossibleMoveCount };
 
     struct TournamentMovesSummary
     {
-        std::uint32_t CountPerMoves[PossibleMoveCombinations]{0};
+        u32 CountPerMoves[PossibleMoveCombinations]{0};
     };
 
     struct TournamentResults
     {
-        std::uint32_t TheoreticalTotalScore;
-        std::uint32_t RealTotalScore;
+        u32 TheoreticalTotalScore;
+        u32 RealTotalScore;
     };
 }

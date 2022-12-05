@@ -3,6 +3,8 @@
 #include <string>
 #include <vector>
 
+#include "types.h"
+
 namespace AoC
 {
     const char* s_testInputData
@@ -22,7 +24,7 @@ namespace AoC
 
     struct OutputData
     {
-        std::uint32_t TotalItemPriorities;
-        std::uint32_t TotalBadgePriorities;
+        u32 TotalItemPriorities;
+        u32 TotalBadgePriorities;
     };
 }

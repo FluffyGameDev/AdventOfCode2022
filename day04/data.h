@@ -1,6 +1,8 @@
 #pragma once
 
 #include <vector>
+
+#include "types.h"
 #include "range.h"
 
 namespace AoC
@@ -28,7 +30,7 @@ namespace AoC
 
     struct OutputData
     {
-        std::uint32_t ContainedRangeCount;
-        std::uint32_t OverlappingRangeCount;
+        u32 ContainedRangeCount;
+        u32 OverlappingRangeCount;
     };
 }

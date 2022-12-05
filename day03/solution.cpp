@@ -27,16 +27,16 @@ namespace AoC
             std::copy(itemSet.begin(), itemSet.end(), commonItems.begin());
         }
 
-        std::uint32_t ComputeItemListPriority(const std::string& commonItems)
+        u32 ComputeItemListPriority(const std::string& commonItems)
         {
-            auto accumulateItemPriority{ [](std::uint32_t currentTotal, char item)
+            auto accumulateItemPriority{ [](u32 currentTotal, char item)
                 { return currentTotal + (std::islower(item) ? item - 'a' + 1 : item - 'A' + 27); } };
             return std::accumulate(commonItems.begin(), commonItems.end(), 0U, accumulateItemPriority);
         }
 
-        std::uint32_t ComputeTotalPriorities(const InputData& inputData)
+        u32 ComputeTotalPriorities(const InputData& inputData)
         {
-            std::uint32_t totalItemPriorities{};
+            u32 totalItemPriorities{};
             std::string commonItems{};
             for (const auto& bagContent : inputData.BagContents)
             {
@@ -50,11 +50,11 @@ namespace AoC
             return totalItemPriorities;
         }
 
-        std::uint32_t ComputeTotalBadgePriorities(const InputData& inputData)
+        u32 ComputeTotalBadgePriorities(const InputData& inputData)
         {
-            static constexpr std::uint32_t elvesPerTeam{ 3 };
+            static constexpr u32 elvesPerTeam{ 3 };
 
-            std::uint32_t totalBadgePriorities{};
+            u32 totalBadgePriorities{};
             std::string commonItemsPass1{};
             std::string commonItemsPass2{};
             for (std::size_t teamStartIndex = 0; teamStartIndex < inputData.BagContents.size(); teamStartIndex += elvesPerTeam)
@@ -93,10 +93,10 @@ namespace AoC
     {
         bool didTestsPass{ true };
 
-        static const std::uint32_t part1TestSolution{ 157 };
+        static const u32 part1TestSolution{ 157 };
         didTestsPass &= output.TotalItemPriorities == part1TestSolution;
 
-        static const std::uint32_t part2TestSolution{ 70 };
+        static const u32 part2TestSolution{ 70 };
         didTestsPass &= output.TotalBadgePriorities == part2TestSolution;
 
         return didTestsPass;

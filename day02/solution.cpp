@@ -23,7 +23,7 @@ namespace AoC
             Win = 6
         };
 
-        static constexpr std::uint32_t PossibleOutcomeCount{ 3 };
+        static constexpr u32 PossibleOutcomeCount{ 3 };
         using CorrespondingMoves = std::array<MatchMove, PossibleMoveCount>;
         using CorrespondingOutcomes = std::array<MatchOutcome, PossibleOutcomeCount>;
 
@@ -44,7 +44,7 @@ namespace AoC
             return outcome;
         }
 
-        std::tuple<MatchOutcome, MatchMove> ComputeTheoreticalMatchOutcome(std::uint32_t matchId)
+        std::tuple<MatchOutcome, MatchMove> ComputeTheoreticalMatchOutcome(u32 matchId)
         {
             static constexpr CorrespondingMoves correspondingMoves{ MatchMove::Rock, MatchMove::Paper, MatchMove::Scissors };
 
@@ -72,7 +72,7 @@ namespace AoC
             return playerMove;
         }
 
-        std::tuple<MatchOutcome, MatchMove> ComputeRealMatchOutcome(std::uint32_t matchId)
+        std::tuple<MatchOutcome, MatchMove> ComputeRealMatchOutcome(u32 matchId)
         {
             static constexpr CorrespondingMoves correspondingMoves{ MatchMove::Rock, MatchMove::Paper, MatchMove::Scissors };
             static constexpr CorrespondingOutcomes correspondingOutcomes{ MatchOutcome::Loss, MatchOutcome::Draw, MatchOutcome::Win };
@@ -91,7 +91,7 @@ namespace AoC
         char playerMove{};
         while (inputStream >> opponentMove >> playerMove)
         {
-            std::uint32_t movesId{ (std::uint32_t)((opponentMove - 'A') * AoC::PossibleMoveCount + (playerMove - 'X')) };
+            u32 movesId{ (u32)((opponentMove - 'A') * AoC::PossibleMoveCount + (playerMove - 'X')) };
             ++movesSummary.CountPerMoves[movesId];
         }
         return true;
@@ -99,20 +99,20 @@ namespace AoC
 
     void ComputeOutput(const TournamentMovesSummary& movesSummary, TournamentResults& tournamentResults)
     {
-        for (std::uint32_t i = 0; i < PossibleMoveCombinations; ++i)
+        for (u32 i = 0; i < PossibleMoveCombinations; ++i)
         {
-            std::uint32_t matchCount{ movesSummary.CountPerMoves[i] };
+            u32 matchCount{ movesSummary.CountPerMoves[i] };
             if (matchCount > 0)
             {
                 {
                     auto [outcome, move] { Internal::ComputeTheoreticalMatchOutcome(i) };
-                    std::uint32_t theoreticalScore{ (std::uint32_t)outcome + (std::uint32_t)move };
+                    u32 theoreticalScore{ (u32)outcome + (u32)move };
                     tournamentResults.TheoreticalTotalScore += theoreticalScore * matchCount;
                 }
 
                 {
                     auto [outcome, move] { Internal::ComputeRealMatchOutcome(i) };
-                    std::uint32_t realScore{ (std::uint32_t)outcome + (std::uint32_t)move };
+                    u32 realScore{ (u32)outcome + (u32)move };
                     tournamentResults.RealTotalScore += realScore * matchCount;
                 }
             }
@@ -121,8 +121,8 @@ namespace AoC
 
     bool ValidateTestOutput(const TournamentResults& output)
     {
-        static const std::uint32_t part1ExpectedResult{ 15 };
-        static const std::uint32_t part2ExpectedResult{ 12 };
+        static const u32 part1ExpectedResult{ 15 };
+        static const u32 part2ExpectedResult{ 12 };
 
         bool didTestsPass{ true };
 

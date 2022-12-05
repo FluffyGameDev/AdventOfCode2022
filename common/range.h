@@ -1,6 +1,6 @@
 #pragma once
 
-#include <cstdint>
+#include "types.h"
 
 namespace AoC
 {
@@ -12,13 +12,13 @@ namespace AoC
         {
         }
 
-        Range(std::uint32_t min, std::uint32_t max)
+        Range(u32 min, u32 max)
         {
             Min = min;
             Max = max;
         }
 
-        bool IsInRange(std::uint32_t value) const
+        bool IsInRange(u32 value) const
         {
             return (Min <= value && value <= Max);
         }
@@ -33,7 +33,7 @@ namespace AoC
             return IsInRange(range.Min) || IsInRange(range.Max) || range.IsInRange(Min) || range.IsInRange(Max);
         }
 
-        std::uint32_t Min;
-        std::uint32_t Max;
+        u32 Min;
+        u32 Max;
     };
 }

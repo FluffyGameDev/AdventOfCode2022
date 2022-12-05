@@ -20,21 +20,21 @@ namespace AoC
     {
         auto isRangeContained{ [](const RangePair& pair)
             { return pair.Range1.IsInRange(pair.Range2) || pair.Range2.IsInRange(pair.Range1); } };
-        output.ContainedRangeCount = (std::uint32_t)std::count_if(input.Ranges.begin(), input.Ranges.end(), isRangeContained);
+        output.ContainedRangeCount = (u32)std::count_if(input.Ranges.begin(), input.Ranges.end(), isRangeContained);
 
         auto doRangesOverlap{ [](const RangePair& pair)
             { return pair.Range1.DoesRangeOverlap(pair.Range2); } };
-        output.OverlappingRangeCount = (std::uint32_t)std::count_if(input.Ranges.begin(), input.Ranges.end(), doRangesOverlap);
+        output.OverlappingRangeCount = (u32)std::count_if(input.Ranges.begin(), input.Ranges.end(), doRangesOverlap);
     }
 
     bool ValidateTestOutput(const OutputData& output)
     {
         bool didTestsPass{ true };
 
-        static constexpr std::uint32_t part1ExpectedValue{ 2 };
+        static constexpr u32 part1ExpectedValue{ 2 };
         didTestsPass &= output.ContainedRangeCount == part1ExpectedValue;
 
-        static constexpr std::uint32_t part2ExpectedValue{ 4 };
+        static constexpr u32 part2ExpectedValue{ 4 };
         didTestsPass &= output.OverlappingRangeCount == part2ExpectedValue;
 
         return didTestsPass;
