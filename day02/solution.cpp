@@ -85,7 +85,7 @@ namespace AoC
         }
     }
 
-    bool ReadInput(std::istream& inputStream, TournamentMovesSummary& movesSummary)
+    bool ReadInput(std::istream& inputStream, TournamentMovesSummary& movesSummary, AoCStep step)
     {
         char opponentMove{};
         char playerMove{};

@@ -72,7 +72,7 @@ namespace AoC
         }
     }
 
-    bool ReadInput(std::istream& inputStream, InputData& inputData)
+    bool ReadInput(std::istream& inputStream, InputData& inputData, AoCStep step)
     {
         inputData.RootDirectory.Name = "/";
         std::vector<File*> fileBreadcrums{};

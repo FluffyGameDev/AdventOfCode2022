@@ -3,7 +3,7 @@
 
 namespace AoC
 {
-    bool ReadInput(std::istream& inputStream, InputData& inputData)
+    bool ReadInput(std::istream& inputStream, InputData& inputData, AoCStep step)
     {
         RangePair pair{};
         while (!inputStream.eof())

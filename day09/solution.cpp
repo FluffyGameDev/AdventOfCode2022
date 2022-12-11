@@ -51,7 +51,7 @@ namespace AoC
         }
     }
 
-    bool ReadInput(std::istream& inputStream, InputData& inputData)
+    bool ReadInput(std::istream& inputStream, InputData& inputData, AoCStep step)
     {
         Command nextCommand;
         while (inputStream >> nextCommand.CommandId >> nextCommand.ExecutionCount)

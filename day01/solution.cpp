@@ -24,7 +24,7 @@ namespace AoC
         }
     }
 
-    bool ReadInput(std::istream& inputStream, std::vector<u32>& caloriesPerElf)
+    bool ReadInput(std::istream& inputStream, std::vector<u32>& caloriesPerElf, AoCStep step)
     {
         u32 currentElfCalories{};
         std::string currentLine{};

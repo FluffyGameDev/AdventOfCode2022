@@ -7,6 +7,12 @@
 
 namespace AoC
 {
+    enum class AoCStep
+    {
+        Test,
+        RealData
+    };
+
     template<class InputData, class OutputData>
     void Run(const char* testInputData)
     {
@@ -15,7 +21,7 @@ namespace AoC
         InputData testInput{};
         OutputData testOutput{};
 
-        AoC::ReadInput(testInputStream, testInput);
+        AoC::ReadInput(testInputStream, testInput, AoCStep::Test);
         AoC::ComputeOutput(testInput, testOutput);
 
         if (AoC::ValidateTestOutput(testOutput))
@@ -29,7 +35,7 @@ namespace AoC
             bool readSucceeded{ inputStream.is_open() };
             if (readSucceeded)
             {
-                readSucceeded &= AoC::ReadInput(inputStream, inputData);
+                readSucceeded &= AoC::ReadInput(inputStream, inputData, AoCStep::RealData);
                 inputStream.close();
             }
 
