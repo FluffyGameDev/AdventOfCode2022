@@ -38,11 +38,11 @@ namespace AoC
 
     struct MonkeyData
     {
-        std::vector<u32> StartingItems{};
+        std::vector<u64> StartingItems{};
         std::vector<u8> BytecodeBuffer{};
-        u32 DivisibilityCondition{};
-        u32 ConditionTrueMonkey{};
-        u32 ConditionFalseMonkey{};
+        u64 DivisibilityCondition{};
+        u64 ConditionTrueMonkey{};
+        u64 ConditionFalseMonkey{};
     };
 
     struct InputData
@@ -52,7 +52,7 @@ namespace AoC
 
     struct OutputData
     {
-        std::vector<u32> InspectionCounters;
-        u32 Part1Result;
+        std::vector<u64> InspectionCounters;
+        u64 Part1Result;
     };
 }

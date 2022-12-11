@@ -36,8 +36,8 @@ namespace AoC
 
     void BytecodeInterpreter::Execute_PushConst(const std::vector<u8>& buffer, u32& instructionPointer)
     {
-        u32 constantValue{ *reinterpret_cast<const u32*>(&buffer[instructionPointer]) };
-        instructionPointer += sizeof(u32);
+        u64 constantValue{ *reinterpret_cast<const u64*>(&buffer[instructionPointer]) };
+        instructionPointer += sizeof(u64);
         m_Stack.push_back(constantValue);
     }
 
@@ -54,18 +54,18 @@ namespace AoC
 
     void BytecodeInterpreter::Execute_Add(const std::vector<u8>& buffer, u32& instructionPointer)
     {
-        u32 valueA{ m_Stack.back() };
+        u64 valueA{ m_Stack.back() };
         m_Stack.pop_back();
-        u32 valueB{ m_Stack.back() };
+        u64 valueB{ m_Stack.back() };
         m_Stack.pop_back();
         m_Stack.push_back(valueA + valueB);
     }
 
     void BytecodeInterpreter::Execute_Mul(const std::vector<u8>& buffer, u32& instructionPointer)
     {
-        u32 valueA{ m_Stack.back() };
+        u64 valueA{ m_Stack.back() };
         m_Stack.pop_back();
-        u32 valueB{ m_Stack.back() };
+        u64 valueB{ m_Stack.back() };
         m_Stack.pop_back();
         m_Stack.push_back(valueA * valueB);
     }

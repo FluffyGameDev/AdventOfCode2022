@@ -12,14 +12,14 @@ namespace AoC
     {
         struct MonkeySimulationData
         {
-            std::vector<u32> HeldItems{};
-            u32 ItemInspectionCount{};
+            std::vector<u64> HeldItems{};
+            u64 ItemInspectionCount{};
         };
 
         void InitMonkeySimulationData(const std::vector<MonkeyData>& monkeys, std::vector<MonkeySimulationData>& monkeySimulationData)
         {
             monkeySimulationData.resize(monkeys.size());
-            for (u32 i = 0; i < monkeys.size(); ++i)
+            for (u64 i = 0; i < monkeys.size(); ++i)
             {
                 monkeySimulationData[i].HeldItems = monkeys[i].StartingItems;
             }
@@ -28,16 +28,16 @@ namespace AoC
         void SimulateMonkey(const std::vector<MonkeyData>& monkeys, std::vector<MonkeySimulationData>& monkeySimulationData,
                 BytecodeInterpreter& interpreter, const MonkeyData& currentMonkeyData, MonkeySimulationData& currentMonkey)
         {
-            currentMonkey.ItemInspectionCount += (u32)currentMonkey.HeldItems.size();
+            currentMonkey.ItemInspectionCount += (u64)currentMonkey.HeldItems.size();
 
-            for (u32 itemValue : currentMonkey.HeldItems)
+            for (u64 itemValue : currentMonkey.HeldItems)
             {
                 interpreter.Reset();
                 interpreter.SetRegisterA(itemValue);
                 interpreter.RunBytecode(currentMonkeyData.BytecodeBuffer);
                 itemValue = interpreter.GetRegisterA() / 3;
 
-                u32 targetMonkeyId{ (itemValue % currentMonkeyData.DivisibilityCondition == 0) ?
+                u64 targetMonkeyId{ (itemValue % currentMonkeyData.DivisibilityCondition == 0) ?
                     currentMonkeyData.ConditionTrueMonkey : currentMonkeyData.ConditionFalseMonkey };
                 monkeySimulationData[targetMonkeyId].HeldItems.push_back(itemValue);
             }
@@ -45,27 +45,32 @@ namespace AoC
             currentMonkey.HeldItems.clear();
         }
 
-        void SimulateNRounds(const std::vector<MonkeyData>& monkeys, std::vector<MonkeySimulationData>& monkeySimulationData, u32 roundCount)
+        void SimulateRound(const std::vector<MonkeyData>& monkeys, std::vector<MonkeySimulationData>& monkeySimulationData, BytecodeInterpreter& interpreter)
         {
-            BytecodeInterpreter interpreter{};
-            for (u32 i = 0; i < roundCount; ++i)
+            for (u64 monkeyId = 0; monkeyId < monkeySimulationData.size(); ++monkeyId)
             {
-                for (u32 monkeyId = 0; monkeyId < monkeySimulationData.size(); ++monkeyId)
-                {
-                    const MonkeyData& currentMonkeyData{ monkeys[monkeyId] };
-                    MonkeySimulationData& currentMonkey{ monkeySimulationData[monkeyId] };
-                    SimulateMonkey(monkeys, monkeySimulationData, interpreter, currentMonkeyData, currentMonkey);
-                }
+                const MonkeyData& currentMonkeyData{ monkeys[monkeyId] };
+                MonkeySimulationData& currentMonkey{ monkeySimulationData[monkeyId] };
+                SimulateMonkey(monkeys, monkeySimulationData, interpreter, currentMonkeyData, currentMonkey);
             }
         }
 
-        u32 ComputeTopNMonkeyBusiness(const std::vector<u32>& inspectionCounters, u32 monkeyCount)
+        void SimulateNRounds(const std::vector<MonkeyData>& monkeys, std::vector<MonkeySimulationData>& monkeySimulationData, u64 roundCount)
         {
-            std::vector<u32> countersCopy{ inspectionCounters };
+            BytecodeInterpreter interpreter{};
+            for (u64 i = 0; i < roundCount; ++i)
+            {
+                SimulateRound(monkeys, monkeySimulationData, interpreter);
+            }
+        }
+
+        u64 ComputeTopNMonkeyBusiness(const std::vector<u64>& inspectionCounters, u64 monkeyCount)
+        {
+            std::vector<u64> countersCopy{ inspectionCounters };
             auto nthIterator{ countersCopy.begin() + monkeyCount };
             std::nth_element(countersCopy.begin(), nthIterator, countersCopy.end(), std::greater());
-            return std::accumulate(countersCopy.begin(), nthIterator, 1U,
-                [](u32 total, u32 value) { return total * value; });
+            return std::accumulate(countersCopy.begin(), nthIterator, 1ULL,
+                [](u64 total, u64 value) { return total * value; });
         }
 
         void CompileBytecode(const std::string& inputLine, std::vector<u8>& bytecodeBuffer)
@@ -83,9 +88,9 @@ namespace AoC
             else
             {
                 bytecodeBuffer.push_back((u8)Bytecode::PushConst);
-                u32 value{ (u32)std::atoi(operand1Text.c_str()) };
+                u64 value{ (u64)std::atoll(operand1Text.c_str()) };
                 char* valueCharBuffer{ reinterpret_cast<char*>(&value) };
-                for (u32 i = 0; i < sizeof(u32); ++i)
+                for (u64 i = 0; i < sizeof(u64); ++i)
                 {
                     bytecodeBuffer.push_back((u8)valueCharBuffer[i]);
                 }
@@ -98,9 +103,9 @@ namespace AoC
             else
             {
                 bytecodeBuffer.push_back((u8)Bytecode::PushConst);
-                u32 value{ (u32)std::atoi(operand2Text.c_str()) };
+                u64 value{ (u64)std::atoi(operand2Text.c_str()) };
                 char* valueCharBuffer{ reinterpret_cast<char*>(&value) };
-                for (u32 i = 0; i < sizeof(u32); ++i)
+                for (u64 i = 0; i < sizeof(u64); ++i)
                 {
                     bytecodeBuffer.push_back((u8)valueCharBuffer[i]);
                 }
@@ -123,7 +128,7 @@ namespace AoC
             std::getline(inputStream, line);
 
             //Starting items: ???
-            u32 itemId{};
+            u64 itemId{};
             std::getline(inputStream, line);
             std::stringstream itemsStream{ line };
             itemsStream >> ignore >> ignore;
@@ -139,15 +144,15 @@ namespace AoC
 
             //Test: divisible by ???
             std::getline(inputStream, line);
-            sscanf_s(line.c_str(), "  Test: divisible by %d", &data.DivisibilityCondition);
+            sscanf_s(line.c_str(), "  Test: divisible by %lld", &data.DivisibilityCondition);
 
             //If true: throw to monkey ???
             std::getline(inputStream, line);
-            sscanf_s(line.c_str(), "    If true: throw to monkey %d", &data.ConditionTrueMonkey);
+            sscanf_s(line.c_str(), "    If true: throw to monkey %lld", &data.ConditionTrueMonkey);
 
             //If false: throw to monkey ???
             std::getline(inputStream, line);
-            sscanf_s(line.c_str(), "    If false: throw to monkey %d", &data.ConditionFalseMonkey);
+            sscanf_s(line.c_str(), "    If false: throw to monkey %lld", &data.ConditionFalseMonkey);
 
             inputData.Monkeys.push_back(data);
             std::getline(inputStream, line);
@@ -158,8 +163,8 @@ namespace AoC
 
     void ComputeOutput(const InputData& input, OutputData& output)
     {
-        static constexpr u32 roundsToSimulate{ 20 };
-        static constexpr u32 topMonkeysCount{ 2 };
+        static constexpr u64 roundsToSimulate{ 20 };
+        static constexpr u64 topMonkeysCount{ 2 };
 
         std::vector<Internal::MonkeySimulationData> monkeySimulationData{};
         Internal::InitMonkeySimulationData(input.Monkeys, monkeySimulationData);
