@@ -52,7 +52,7 @@ namespace AoC
 
     struct OutputData
     {
-        std::vector<u64> InspectionCounters;
         u64 Part1Result;
+        u64 Part2Result;
     };
 }

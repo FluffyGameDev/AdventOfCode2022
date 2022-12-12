@@ -2,6 +2,7 @@
 #include "aoc.h"
 
 #include "bytecode.h"
+#include <functional>
 #include <numeric>
 #include <sstream>
 #include <string>
@@ -16,6 +17,8 @@ namespace AoC
             u64 ItemInspectionCount{};
         };
 
+        using PostOperationAction = std::function<u64(u64)>;
+
         void InitMonkeySimulationData(const std::vector<MonkeyData>& monkeys, std::vector<MonkeySimulationData>& monkeySimulationData)
         {
             monkeySimulationData.resize(monkeys.size());
@@ -26,7 +29,8 @@ namespace AoC
         }
 
         void SimulateMonkey(const std::vector<MonkeyData>& monkeys, std::vector<MonkeySimulationData>& monkeySimulationData,
-                BytecodeInterpreter& interpreter, const MonkeyData& currentMonkeyData, MonkeySimulationData& currentMonkey)
+                BytecodeInterpreter& interpreter, const MonkeyData& currentMonkeyData, MonkeySimulationData& currentMonkey,
+                const PostOperationAction& postOperationAction)
         {
             currentMonkey.ItemInspectionCount += (u64)currentMonkey.HeldItems.size();
 
@@ -35,7 +39,7 @@ namespace AoC
                 interpreter.Reset();
                 interpreter.SetRegisterA(itemValue);
                 interpreter.RunBytecode(currentMonkeyData.BytecodeBuffer);
-                itemValue = interpreter.GetRegisterA() / 3;
+                itemValue = postOperationAction(interpreter.GetRegisterA());
 
                 u64 targetMonkeyId{ (itemValue % currentMonkeyData.DivisibilityCondition == 0) ?
                     currentMonkeyData.ConditionTrueMonkey : currentMonkeyData.ConditionFalseMonkey };
@@ -45,22 +49,22 @@ namespace AoC
             currentMonkey.HeldItems.clear();
         }
 
-        void SimulateRound(const std::vector<MonkeyData>& monkeys, std::vector<MonkeySimulationData>& monkeySimulationData, BytecodeInterpreter& interpreter)
+        void SimulateRound(const std::vector<MonkeyData>& monkeys, std::vector<MonkeySimulationData>& monkeySimulationData, BytecodeInterpreter& interpreter, const PostOperationAction& postOperationAction)
         {
             for (u64 monkeyId = 0; monkeyId < monkeySimulationData.size(); ++monkeyId)
             {
                 const MonkeyData& currentMonkeyData{ monkeys[monkeyId] };
                 MonkeySimulationData& currentMonkey{ monkeySimulationData[monkeyId] };
-                SimulateMonkey(monkeys, monkeySimulationData, interpreter, currentMonkeyData, currentMonkey);
+                SimulateMonkey(monkeys, monkeySimulationData, interpreter, currentMonkeyData, currentMonkey, postOperationAction);
             }
         }
 
-        void SimulateNRounds(const std::vector<MonkeyData>& monkeys, std::vector<MonkeySimulationData>& monkeySimulationData, u64 roundCount)
+        void SimulateNRounds(const std::vector<MonkeyData>& monkeys, std::vector<MonkeySimulationData>& monkeySimulationData, u64 roundCount, const PostOperationAction& postOperationAction)
         {
             BytecodeInterpreter interpreter{};
             for (u64 i = 0; i < roundCount; ++i)
             {
-                SimulateRound(monkeys, monkeySimulationData, interpreter);
+                SimulateRound(monkeys, monkeySimulationData, interpreter, postOperationAction);
             }
         }
 
@@ -71,6 +75,16 @@ namespace AoC
             std::nth_element(countersCopy.begin(), nthIterator, countersCopy.end(), std::greater());
             return std::accumulate(countersCopy.begin(), nthIterator, 1ULL,
                 [](u64 total, u64 value) { return total * value; });
+        }
+
+        u64 ComputeItemModulus(const InputData& input)
+        {
+            u64 result{ 1 };
+            for (const MonkeyData& monkeyData : input.Monkeys)
+            {
+                result *= monkeyData.DivisibilityCondition;
+            }
+            return result;
         }
 
         void CompileBytecode(const std::string& inputLine, std::vector<u8>& bytecodeBuffer)
@@ -163,25 +177,36 @@ namespace AoC
 
     void ComputeOutput(const InputData& input, OutputData& output)
     {
-        static constexpr u64 roundsToSimulate{ 20 };
+        static constexpr u64 roundsToSimulatePart1{ 20 };
+        static constexpr u64 roundsToSimulatePart2{ 10000 };
         static constexpr u64 topMonkeysCount{ 2 };
+        auto getInspectionCount{ [](const Internal::MonkeySimulationData& data) { return data.ItemInspectionCount; } };
 
-        std::vector<Internal::MonkeySimulationData> monkeySimulationData{};
-        Internal::InitMonkeySimulationData(input.Monkeys, monkeySimulationData);
-        Internal::SimulateNRounds(input.Monkeys, monkeySimulationData, roundsToSimulate);
+        std::vector<Internal::MonkeySimulationData> monkeySimulationDataPart1{};
+        auto part1PostOp{ [](u64 item) { return item / 3; } };
+        Internal::InitMonkeySimulationData(input.Monkeys, monkeySimulationDataPart1);
+        Internal::SimulateNRounds(input.Monkeys, monkeySimulationDataPart1, roundsToSimulatePart1, part1PostOp);
+        std::vector<u64> inspectionCountersPart1(monkeySimulationDataPart1.size(), 0);
+        std::transform(monkeySimulationDataPart1.begin(), monkeySimulationDataPart1.end(), inspectionCountersPart1.begin(), getInspectionCount);
+        output.Part1Result = Internal::ComputeTopNMonkeyBusiness(inspectionCountersPart1, topMonkeysCount);
 
-        output.InspectionCounters.resize(monkeySimulationData.size());
-        std::transform(monkeySimulationData.begin(), monkeySimulationData.end(), output.InspectionCounters.begin(),
-            [](const Internal::MonkeySimulationData& data) { return data.ItemInspectionCount; });
 
-        output.Part1Result = Internal::ComputeTopNMonkeyBusiness(output.InspectionCounters, topMonkeysCount);
+        u64 itemModulus{ Internal::ComputeItemModulus(input) };
+        std::vector<Internal::MonkeySimulationData> monkeySimulationDataPart2{};
+        auto part2PostOp{ [itemModulus](u64 item) { return item % itemModulus; } };
+        Internal::InitMonkeySimulationData(input.Monkeys, monkeySimulationDataPart2);
+        Internal::SimulateNRounds(input.Monkeys, monkeySimulationDataPart2, roundsToSimulatePart2, part2PostOp);
+        std::vector<u64> inspectionCountersPart2(monkeySimulationDataPart2.size(), 0);
+        std::transform(monkeySimulationDataPart2.begin(), monkeySimulationDataPart2.end(), inspectionCountersPart2.begin(), getInspectionCount);
+        output.Part2Result = Internal::ComputeTopNMonkeyBusiness(inspectionCountersPart2, topMonkeysCount);
     }
 
     bool ValidateTestOutput(const OutputData& output)
     {
         bool didTestsPass{ true };
 
-        didTestsPass &= output.Part1Result == 10605;
+        didTestsPass &= output.Part1Result == 10605ULL;
+        didTestsPass &= output.Part2Result == 2713310158ULL;
 
         return didTestsPass;
     }
@@ -189,6 +214,7 @@ namespace AoC
     void PrintOutput(const OutputData& output)
     {
         fmt::print("Part 1 Result: {}\n", output.Part1Result);
+        fmt::print("Part 2 Result: {}\n", output.Part2Result);
     }
 }
 
