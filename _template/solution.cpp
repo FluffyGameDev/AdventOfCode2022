@@ -8,7 +8,7 @@ namespace AoC
         // TODO
     }
 
-    bool ReadInput(std::istream& inputStream, InputData& inputData)
+    bool ReadInput(std::istream& inputStream, InputData& inputData, AoCStep step)
     {
         // TODO
         return true;
