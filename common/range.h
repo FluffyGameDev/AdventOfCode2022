@@ -12,13 +12,13 @@ namespace AoC
         {
         }
 
-        Range(u32 min, u32 max)
+        Range(s32 min, s32 max)
         {
             Min = min;
             Max = max;
         }
 
-        bool IsInRange(u32 value) const
+        bool IsInRange(s32 value) const
         {
             return (Min <= value && value <= Max);
         }
@@ -33,7 +33,12 @@ namespace AoC
             return IsInRange(range.Min) || IsInRange(range.Max) || range.IsInRange(Min) || range.IsInRange(Max);
         }
 
-        u32 Min;
-        u32 Max;
+        s32 Min;
+        s32 Max;
     };
+
+    bool operator==(const Range& lhs, const Range& rhs)
+    {
+        return lhs.Min == rhs.Min && lhs.Max == rhs.Max;
+    }
 }
