@@ -2,6 +2,7 @@
 #include "aoc.h"
 
 #include "range.h"
+#include <chrono>
 #include <numeric>
 
 namespace AoC
@@ -14,12 +15,12 @@ namespace AoC
                    std::abs(sensor.BeaconPosition.y - sensor.SensorPosition.y);
         }
 
-        void ComputeInspectedRowRanges(const InputData& input, std::vector<Range>& sensorRangesOnRow)
+        void ComputeInspectedRowRanges(const std::vector<SensorData>& sensors, s32 inspectedRow, std::vector<Range>& sensorRangesOnRow)
         {
-            for (const SensorData& sensor : input.Sensors)
+            for (const SensorData& sensor : sensors)
             {
                 s32 sensorDistance{ ComputeSensorManhattanDistance(sensor) };
-                s32 distanceToRow{ std::abs(sensor.SensorPosition.y - input.InspectedRow) };
+                s32 distanceToRow{ std::abs(sensor.SensorPosition.y - inspectedRow) };
                 if (distanceToRow <= sensorDistance)
                 {
                     s32 rowHalfWidth{ sensorDistance - distanceToRow };
@@ -102,15 +103,33 @@ namespace AoC
 
     void ComputeOutput(const InputData& input, OutputData& output)
     {
-        std::vector<Range> sensorRangesOnRow{};
-        Internal::ComputeInspectedRowRanges(input, sensorRangesOnRow);
-        Internal::MergeRanges(sensorRangesOnRow);
-
         std::vector<Vector2> beacons{};
+        std::vector<Range> sensorRangesOnRow{};
         Internal::ComputeBeaconPositions(input.Sensors, beacons);
-        u32 beaconsOnRowCount{ Internal::ComputeBeaconsOnRowCount(beacons, input.InspectedRow) };
 
+        Internal::ComputeInspectedRowRanges(input.Sensors, input.InspectedRow, sensorRangesOnRow);
+        Internal::MergeRanges(sensorRangesOnRow);
+        u32 beaconsOnRowCount{ Internal::ComputeBeaconsOnRowCount(beacons, input.InspectedRow) };
         output.BeaconlessPositionCountPart1 = Internal::ComputePositionCountInRanges(sensorRangesOnRow) - beaconsOnRowCount;
+
+
+        fmt::print("======= BEGIN ========\n");
+        for (s32 i = 0; i < 2 * input.InspectedRow; ++i)
+        {
+            sensorRangesOnRow.clear();
+            Internal::ComputeInspectedRowRanges(input.Sensors, i, sensorRangesOnRow);
+            Internal::MergeRanges(sensorRangesOnRow);
+
+            if (sensorRangesOnRow.size() >= 2)
+            {
+                fmt::print("{}: ", i);
+                for (const Range& range : sensorRangesOnRow)
+                {
+                    fmt::print("[{},{}], ", range.Min, range.Max);
+                }
+                fmt::print("\n");
+            }
+        }
     }
 
     bool ValidateTestOutput(const OutputData& output)
